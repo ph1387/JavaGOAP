@@ -25,7 +25,7 @@ class MoveToState implements IFSMState {
 	 * @see unitControlModule.goapActionTaking.IFSMState#runGoapAction(unitControlModule.goapActionTaking.GoapUnit)
 	 */
 	@Override
-	public boolean runGoapAction(GoapUnit goapUnit) {
+	public boolean runGoapAction(IGoapUnit goapUnit) {
 		boolean stillMoving = true;
 
 		if ((this.currentAction.requiresInRange(goapUnit) && this.currentAction.isInRange(goapUnit))

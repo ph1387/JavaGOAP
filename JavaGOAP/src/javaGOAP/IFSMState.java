@@ -12,5 +12,5 @@ interface IFSMState {
 	 * @return true or false depending if the action is still running (true) or
 	 *         is completed (false).
 	 */
-	public boolean runGoapAction(GoapUnit goapUnit) throws Exception;
+	public boolean runGoapAction(IGoapUnit goapUnit) throws Exception;
 }

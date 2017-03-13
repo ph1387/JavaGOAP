@@ -1,7 +1,6 @@
 package javaGOAP;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 
@@ -21,7 +20,7 @@ class IdleState implements IFSMState {
 	// -------------------- Functions
 
 	@Override
-	public boolean runGoapAction(GoapUnit goapUnit) {
+	public boolean runGoapAction(IGoapUnit goapUnit) {
 		Queue<GoapAction> plannedQueue = GoapPlanner.plan(goapUnit);
 
 		if (plannedQueue != null) {

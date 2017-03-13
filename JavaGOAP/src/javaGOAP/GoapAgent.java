@@ -11,16 +11,19 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 
 	private FSM fsm = new FSM();
 	private IdleState idleState = new IdleState();
-	private GoapUnit assignedGoapUnit;
+	private IGoapUnit assignedGoapUnit;
 
 	/**
 	 * @param assignedUnit
 	 *            the GoapUnit the agent works with.
 	 */
-	public GoapAgent(GoapUnit assignedUnit) {
+	public GoapAgent(IGoapUnit assignedUnit) {
 		this.assignedGoapUnit = assignedUnit;
 
-		this.assignedGoapUnit.addImportantUnitGoalChangeListener(this);
+		// Only subclasses of the own GoapUnit are able to emit events
+		if(this.assignedGoapUnit instanceof GoapUnit) {
+			((GoapUnit) this.assignedGoapUnit).addImportantUnitGoalChangeListener(this);
+		}
 		this.idleState.addPlanCreatedListener(this);
 		this.fsm.addPlanEventListener(this);
 	}
@@ -38,7 +41,7 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 
 	// ------------------------------ Getter / Setter
 
-	public GoapUnit getAssignedGoapUnit() {
+	public IGoapUnit getAssignedGoapUnit() {
 		return this.assignedGoapUnit;
 	}
 

@@ -29,7 +29,7 @@ final class FSM {
 	 * @param goapUnit
 	 *            unit whose actions are getting cycled.
 	 */
-	void update(GoapUnit goapUnit) {
+	void update(IGoapUnit goapUnit) {
 		try {
 			if (!this.states.isEmpty() && !this.states.peek().runGoapAction(goapUnit)) {
 				IFSMState state = this.states.pop();

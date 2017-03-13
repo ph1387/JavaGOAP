@@ -33,7 +33,7 @@ class RunActionState implements IFSMState {
 	 * @see unitControlModule.goapActionTaking.IFSMState#runGoapAction(unitControlModule.goapActionTaking.GoapUnit)
 	 */
 	@Override
-	public boolean runGoapAction(GoapUnit goapUnit) throws Exception {
+	public boolean runGoapAction(IGoapUnit goapUnit) throws Exception {
 		boolean workingOnQueue = false;
 
 		try {

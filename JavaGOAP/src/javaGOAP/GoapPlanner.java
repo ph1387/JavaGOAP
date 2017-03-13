@@ -71,7 +71,8 @@ public class GoapPlanner implements IGoapPlanner {
 				createdPlan = searchGraphForActionQueue(createGraph());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			// TODO: Can be enabled for debug purposes.
+			//e.printStackTrace();
 		}
 		return createdPlan;
 	}

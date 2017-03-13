@@ -18,7 +18,10 @@ import org.jgrapht.graph.SimpleDirectedWeightedGraph;
  * 
  * @author P H - 28.01.2017
  */
-class GoapPlanner {
+public class GoapPlanner implements IGoapPlanner {
+	private IGoapUnit goapUnit;
+	private GraphNode startNode;
+	private List<GraphNode> endNodes;
 
 	// -------------------- Functions
 
@@ -38,36 +41,34 @@ class GoapPlanner {
 	 *         perform to archive the desired goalState OR null, if no plan was
 	 *         generated.
 	 */
-	static Queue<GoapAction> plan(IGoapUnit goapUnit) {
+	public Queue<GoapAction> plan(IGoapUnit goapUnit) {
 		Queue<GoapAction> createdPlan = null;
+		this.goapUnit = goapUnit;
+		this.startNode = new GraphNode(null);
+		this.endNodes = new ArrayList<GraphNode>();
 
 		try {
-			sortGoalStates(goapUnit);
-
-			GraphNode startNode = new GraphNode(null);
-			List<GraphNode> endNodes = new ArrayList<GraphNode>();
+			sortGoalStates();
 
 			// The Integer.MaxValue indicates that the goal was passed by the
 			// changeGoalImmediatly function. An empty Queue is returned instead
 			// of null because null would result in the IdleState to call this
 			// function again. An empty Queue is finished in one cycle with no
 			// effect at all.
-			if (goapUnit.getGoalState().get(0).importance == Integer.MAX_VALUE) {
+			if (this.goapUnit.getGoalState().get(0).importance == Integer.MAX_VALUE) {
 				List<GoapState> goalState = new ArrayList<GoapState>();
 
-				goalState.add(goapUnit.getGoalState().get(0));
+				goalState.add(this.goapUnit.getGoalState().get(0));
 
-				createdPlan = searchGraphForActionQueue(createGraph(goapUnit, startNode, endNodes, goalState),
-						startNode, endNodes);
+				createdPlan = searchGraphForActionQueue(createGraph(goalState));
 
 				if (createdPlan == null) {
 					createdPlan = new LinkedList<GoapAction>();
 				}
 
-				goapUnit.getGoalState().remove(0);
+				this.goapUnit.getGoalState().remove(0);
 			} else {
-				createdPlan = searchGraphForActionQueue(createGraph(goapUnit, startNode, endNodes), startNode,
-						endNodes);
+				createdPlan = searchGraphForActionQueue(createGraph());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,13 +82,11 @@ class GoapPlanner {
 	 * Function for sorting a goapUnits goalStates (descending). The most
 	 * important goal has the highest importance value.
 	 * 
-	 * @param goapUnit
-	 *            the GoapUnit which goals are being sorted.
 	 * @return the sorted goal list of the goapUnit.
 	 */
-	private static List<GoapState> sortGoalStates(IGoapUnit goapUnit) {
-		if (goapUnit.getGoalState().size() > 1) {
-			goapUnit.getGoalState().sort(new Comparator<GoapState>() {
+	private List<GoapState> sortGoalStates() {
+		if (this.goapUnit.getGoalState().size() > 1) {
+			this.goapUnit.getGoalState().sort(new Comparator<GoapState>() {
 
 				@Override
 				public int compare(GoapState o1, GoapState o2) {
@@ -95,7 +94,7 @@ class GoapPlanner {
 				}
 			});
 		}
-		return goapUnit.getGoalState();
+		return this.goapUnit.getGoalState();
 	}
 
 	// ------------------------------ Create a graph
@@ -103,37 +102,27 @@ class GoapPlanner {
 	/**
 	 * Convenience function for all current goalStates.
 	 * 
-	 * @see #createGraph(GoapUnit goapUnit, GraphNode startNode, List endNodes,
-	 *      List goalState)
+	 * @see #createGraph(List goalState)
 	 */
-	private static SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> createGraph(IGoapUnit goapUnit,
-			GraphNode startNode, List<GraphNode> endNodes) {
-		return createGraph(goapUnit, startNode, endNodes, goapUnit.getGoalState());
+	private SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> createGraph() {
+		return createGraph(goapUnit.getGoalState());
 	}
 
 	/**
 	 * Function to create a graph based on all possible unit actions of the
 	 * GoapUnit for (a) specific goal/-s.
 	 * 
-	 * @param goapUnit
-	 *            the GoapUnit the plan gets generated for.
-	 * @param startNode
-	 *            a Reference to the starting node to minimize search time.
-	 * @param endNodes
-	 *            a list for all end nodes, which are being created to minimize
-	 *            the search time later.
 	 * @param goalState
 	 *            list of states the action queue has to fulfill.
 	 * @return a directedWeightedGraph generated from all possible unit actions
 	 *         for a goal.
 	 */
-	private static SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> createGraph(IGoapUnit goapUnit,
-			GraphNode startNode, List<GraphNode> endNodes, List<GoapState> goalState) {
+	private SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> createGraph(List<GoapState> goalState) {
 		SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> generatedGraph = new SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge>(
 				DefaultWeightedEdge.class);
 
-		addVertices(generatedGraph, goapUnit, startNode, endNodes, goalState);
-		addEdges(generatedGraph, goapUnit, startNode, endNodes);
+		addVertices(generatedGraph, goalState);
+		addEdges(generatedGraph);
 
 		return generatedGraph;
 	}
@@ -145,27 +134,19 @@ class GoapPlanner {
 	 * 
 	 * @param graph
 	 *            the graph the vertices are being added to.
-	 * @param goapUnit
-	 *            the unit whose worldState, goalStates and actions are being
-	 *            added to the graph as nodes.
-	 * @param startNode
-	 *            a Reference to the starting node to minimize search time.
-	 * @param endNodes
-	 *            a list for all end nodes, which are being created to minimize
-	 *            the search time later.
 	 * @param goalState
 	 *            List of States the unit has listed as their goals.
 	 */
-	private static void addVertices(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
-			IGoapUnit goapUnit, GraphNode startNode, List<GraphNode> endNodes, List<GoapState> goalState) {
+	private void addVertices(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
+			List<GoapState> goalState) {
 		// The effects from the world state as well as the precondition of each
 		// goal have to be set at the beginning, since these are the effects the
 		// unit tries to archive with its actions. Also the startNode has to
 		// overwrite the existing GraphNode as an initialization of a new Object
 		// would not be reflected to the function caller.
-		GraphNode start = new GraphNode(null, goapUnit.getWorldState());
-		startNode.overwriteOwnProperties(start);
-		graph.addVertex(startNode);
+		GraphNode start = new GraphNode(null, this.goapUnit.getWorldState());
+		this.startNode.overwriteOwnProperties(start);
+		graph.addVertex(this.startNode);
 
 		for (GoapState state : goalState) {
 			HashSet<GoapState> goalStateHash = new HashSet<GoapState>();
@@ -173,10 +154,10 @@ class GoapPlanner {
 
 			GraphNode end = new GraphNode(goalStateHash, null);
 			graph.addVertex(end);
-			endNodes.add(end);
+			this.endNodes.add(end);
 		}
 
-		HashSet<GoapAction> possibleActions = extractPossibleActions(goapUnit);
+		HashSet<GoapAction> possibleActions = extractPossibleActions();
 
 		// Afterward all other possible actions have to be added as well.
 		if (possibleActions != null) {
@@ -189,16 +170,14 @@ class GoapPlanner {
 	/**
 	 * Needed to check if the available actions can actually be performed
 	 * 
-	 * @param goapUnit
-	 *            the GoapUnit whose actions are being checked.
 	 * @return all possible actions which are actually available for the unit.
 	 */
-	private static HashSet<GoapAction> extractPossibleActions(IGoapUnit goapUnit) {
+	private HashSet<GoapAction> extractPossibleActions() {
 		HashSet<GoapAction> possibleActions = new HashSet<GoapAction>();
 
 		try {
-			for (GoapAction goapAction : goapUnit.getAvailableActions()) {
-				if (goapAction.checkProceduralPrecondition(goapUnit)) {
+			for (GoapAction goapAction : this.goapUnit.getAvailableActions()) {
+				if (goapAction.checkProceduralPrecondition(this.goapUnit)) {
 					possibleActions.add(goapAction);
 				}
 			}
@@ -220,19 +199,13 @@ class GoapPlanner {
 	 * 
 	 * @param graph
 	 *            the graph the edges are being added to.
-	 * @param goapUnit
-	 *            the unit, whose actions and their effects / preconditions
-	 *            determine the connections.
-	 * @param startNode
-	 *            the starting node (worldState) from which all paths emerge.
 	 * @param endNodes
 	 *            the end nodes, to which paths inside the graph lead to.
 	 */
-	private static void addEdges(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph, IGoapUnit goapUnit,
-			GraphNode startNode, List<GraphNode> endNodes) {
+	private void addEdges(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph) {
 		Queue<GraphNode> nodesToWorkOn = new LinkedList<GraphNode>();
 
-		addDefaultEdges(graph, startNode, nodesToWorkOn);
+		addDefaultEdges(graph, nodesToWorkOn);
 
 		// TODO: Possible Change: Add a HashSet to keep track of all nodes
 		// already
@@ -246,8 +219,8 @@ class GoapPlanner {
 			GraphNode node = nodesToWorkOn.poll();
 
 			// Select only node to which a path can be created (-> targets!)
-			if (!node.equals(startNode) && !endNodes.contains(node)) {
-				tryToConnectNode(graph, goapUnit, startNode, endNodes, node, nodesToWorkOn);
+			if (!node.equals(this.startNode) && !this.endNodes.contains(node)) {
+				tryToConnectNode(graph, node, nodesToWorkOn);
 			}
 		}
 	}
@@ -262,21 +235,18 @@ class GoapPlanner {
 	 * 
 	 * @param graph
 	 *            the graph the edges are getting added to.
-	 * @param startNode
-	 *            the starting node which gets connected with the default
-	 *            accessible nodes.
 	 * @param nodesToWorkOn
 	 *            the Queue in which nodes which got connected are getting added
 	 *            to.
 	 */
-	private static void addDefaultEdges(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
-			GraphNode startNode, Queue<GraphNode> nodesToWorkOn) {
+	private void addDefaultEdges(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
+			Queue<GraphNode> nodesToWorkOn) {
 
 		// TODO: Possible Change: Remove graphNode.action != null
 		for (GraphNode graphNode : graph.vertexSet()) {
-			if (!startNode.equals(graphNode) && graphNode.action != null && (graphNode.preconditions.isEmpty()
-					|| areAllPreconditionsMet(graphNode.preconditions, startNode.effects))) {
-				addEgdeWithWeigth(graph, startNode, graphNode, new DefaultWeightedEdge(), 0);
+			if (!this.startNode.equals(graphNode) && graphNode.action != null && (graphNode.preconditions.isEmpty()
+					|| areAllPreconditionsMet(graphNode.preconditions, this.startNode.effects))) {
+				addEgdeWithWeigth(graph, this.startNode, graphNode, new DefaultWeightedEdge(), 0);
 				if (!nodesToWorkOn.contains(graphNode)) {
 					nodesToWorkOn.add(graphNode);
 				}
@@ -286,14 +256,14 @@ class GoapPlanner {
 				List<GraphNode> vertices = new ArrayList<GraphNode>();
 				List<DefaultWeightedEdge> edges = new ArrayList<DefaultWeightedEdge>();
 
-				vertices.add(startNode);
+				vertices.add(this.startNode);
 				vertices.add(graphNode);
 
-				edges.add(graph.getEdge(startNode, graphNode));
+				edges.add(graph.getEdge(this.startNode, graphNode));
 
 				GraphPath<GraphNode, DefaultWeightedEdge> graphPathToDefaultNode = new GraphWalk<GraphNode, DefaultWeightedEdge>(
-						graph, startNode, graphNode, vertices, edges,
-						graph.getEdgeWeight(graph.getEdge(startNode, graphNode)));
+						graph, this.startNode, graphNode, vertices, edges,
+						graph.getEdgeWeight(graph.getEdge(this.startNode, graphNode)));
 				graphNode.addGraphPath(null, graphPathToDefaultNode);
 			}
 		}
@@ -371,13 +341,6 @@ class GoapPlanner {
 	 * 
 	 * @param graph
 	 *            the graph in which the provided nodes are located.
-	 * @param goapUnit
-	 *            the unit to which the graph is being created.
-	 * @param startNode
-	 *            the starting node of the graph (worldState).
-	 * @param endNodes
-	 *            a list of all end nodes in the graph, whose states the unit is
-	 *            trying to archive.
 	 * @param node
 	 *            the node which is being connected to another node.
 	 * @param nodesToWorkOn
@@ -386,8 +349,7 @@ class GoapPlanner {
 	 * @return true or false depending on if the node was connected to another
 	 *         node.
 	 */
-	private static boolean tryToConnectNode(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
-			IGoapUnit goapUnit, GraphNode startNode, List<GraphNode> endNodes, GraphNode node,
+	private boolean tryToConnectNode(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph, GraphNode node,
 			Queue<GraphNode> nodesToWorkOn) {
 		boolean connected = false;
 
@@ -401,7 +363,7 @@ class GoapPlanner {
 			// alternative routes are being stored inside the pathsToThisNode
 			// list. This is because of the use of a Queue, which loses the
 			// memory of which nodes were already connected.
-			if (!node.equals(otherNodeInGraph) && !startNode.equals(otherNodeInGraph)
+			if (!node.equals(otherNodeInGraph) && !this.startNode.equals(otherNodeInGraph)
 					&& !graph.containsEdge(node, otherNodeInGraph)) {
 
 				// Every saved path to this node is checked if any of these
@@ -412,7 +374,7 @@ class GoapPlanner {
 						connected = true;
 
 						addEgdeWithWeigth(graph, node, otherNodeInGraph, new DefaultWeightedEdge(),
-								node.action.generateCost(goapUnit));
+								node.action.generateCost(this.goapUnit));
 
 						otherNodeInGraph.addGraphPath(pathToListNode,
 								addNodeToGraphPath(graph, pathToListNode, otherNodeInGraph));
@@ -471,25 +433,19 @@ class GoapPlanner {
 	 * @param graph
 	 *            the graph of GoapActions the unit has to take in order to
 	 *            archive a goal.
-	 * @param startNode
-	 *            a Reference to the starting node to minimize search time.
-	 * @param endNodes
-	 *            a list of all end nodes to minimize search time. Index 0 is
-	 *            the most important one.
 	 * @return the Queue of GoapActions which has the lowest cost to archive a
 	 *         goal.
 	 */
-	private static Queue<GoapAction> searchGraphForActionQueue(
-			SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph, GraphNode startNode,
-			List<GraphNode> endNodes) {
+	private Queue<GoapAction> searchGraphForActionQueue(
+			SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph) {
 		Queue<GoapAction> actionQueue = null;
 
-		for (int i = 0; i < endNodes.size() && actionQueue == null; i++) {
-			sortPathsLeadingToNode(endNodes.get(i));
+		for (int i = 0; i < this.endNodes.size() && actionQueue == null; i++) {
+			sortPathsLeadingToNode(this.endNodes.get(i));
 
-			for (int j = 0; j < endNodes.get(i).pathsToThisNode.size() && actionQueue == null; j++) {
-				actionQueue = extractActionsFromGraphPath(endNodes.get(i).pathsToThisNode.get(j), startNode,
-						endNodes.get(i));
+			for (int j = 0; j < this.endNodes.get(i).pathsToThisNode.size() && actionQueue == null; j++) {
+				actionQueue = extractActionsFromGraphPath(this.endNodes.get(i).pathsToThisNode.get(j), this.startNode,
+						this.endNodes.get(i));
 			}
 		}
 		return actionQueue;

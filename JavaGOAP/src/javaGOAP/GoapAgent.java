@@ -7,10 +7,11 @@ import java.util.Queue;
  * 
  * @author P H - 28.01.2017
  */
-public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedEventListener, FSMPlanEventListener {
+public abstract class GoapAgent
+		implements ImportantUnitChangeEventListener, PlanCreatedEventListener, FSMPlanEventListener {
 
 	private FSM fsm = new FSM();
-	private IdleState idleState = new IdleState();
+	private IdleState idleState;
 	private IGoapUnit assignedGoapUnit;
 
 	/**
@@ -19,9 +20,10 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 	 */
 	public GoapAgent(IGoapUnit assignedUnit) {
 		this.assignedGoapUnit = assignedUnit;
+		this.idleState = new IdleState(this.createPlanner());
 
 		// Only subclasses of the own GoapUnit are able to emit events
-		if(this.assignedGoapUnit instanceof GoapUnit) {
+		if (this.assignedGoapUnit instanceof GoapUnit) {
 			((GoapUnit) this.assignedGoapUnit).addImportantUnitGoalChangeListener(this);
 		}
 		this.idleState.addPlanCreatedListener(this);
@@ -38,6 +40,15 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 		this.assignedGoapUnit.update();
 		this.fsm.update(this.assignedGoapUnit);
 	}
+
+	/**
+	 * Function for subclasses to provide an instance of an planner which is
+	 * going to be used to create the action Queue.
+	 * 
+	 * @return the used planner instance implementing the IGoapPlanner
+	 *         interface.
+	 */
+	protected abstract IGoapPlanner createPlanner();
 
 	// ------------------------------ Getter / Setter
 
@@ -58,7 +69,7 @@ public class GoapAgent implements ImportantUnitChangeEventListener, PlanCreatedE
 	@Override
 	public void onPlanCreated(Queue<GoapAction> plan) {
 		this.assignedGoapUnit.goapPlanFound(plan);
-		
+
 		this.fsm.popStack();
 		this.fsm.pushStack(new RunActionState(this.fsm, plan));
 	}

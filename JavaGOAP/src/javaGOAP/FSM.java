@@ -44,8 +44,6 @@ final class FSM {
 			if (state instanceof RunActionState) {
 				this.dispatchNewPlanFailedEvent(((RunActionState) state).getCurrentActions());
 			}
-
-			// TODO: Possible Change: Add System.out
 			e.printStackTrace();
 		}
 	}

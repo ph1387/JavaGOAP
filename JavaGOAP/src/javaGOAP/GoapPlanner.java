@@ -7,10 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.jgrapht.GraphPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.GraphWalk;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+import graph.DirectedWeightedGraph;
+import graph.Edge;
+import graph.PathFactory;
+import graph.WeightedEdge;
+import graph.WeightedPath;
 
 /**
  * GoapPlanner.java --- Class for generating a Queue of GoapActions using the
@@ -71,8 +72,7 @@ public class GoapPlanner implements IGoapPlanner {
 				createdPlan = searchGraphForActionQueue(createGraph());
 			}
 		} catch (Exception e) {
-			// TODO: Can be enabled for debug purposes.
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 		return createdPlan;
 	}
@@ -105,7 +105,7 @@ public class GoapPlanner implements IGoapPlanner {
 	 * 
 	 * @see #createGraph(List goalState)
 	 */
-	private SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> createGraph() {
+	private DirectedWeightedGraph<GraphNode, WeightedEdge> createGraph() {
 		return createGraph(goapUnit.getGoalState());
 	}
 
@@ -115,12 +115,11 @@ public class GoapPlanner implements IGoapPlanner {
 	 * 
 	 * @param goalState
 	 *            list of states the action queue has to fulfill.
-	 * @return a directedWeightedGraph generated from all possible unit actions
+	 * @return a DirectedWeightedGraph generated from all possible unit actions
 	 *         for a goal.
 	 */
-	private SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> createGraph(List<GoapState> goalState) {
-		SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> generatedGraph = new SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge>(
-				DefaultWeightedEdge.class);
+	private DirectedWeightedGraph<GraphNode, WeightedEdge> createGraph(List<GoapState> goalState) {
+		DirectedWeightedGraph<GraphNode, WeightedEdge> generatedGraph = new DirectedWeightedGraph<GraphNode, WeightedEdge>();
 
 		addVertices(generatedGraph, goalState);
 		addEdges(generatedGraph);
@@ -138,8 +137,7 @@ public class GoapPlanner implements IGoapPlanner {
 	 * @param goalState
 	 *            List of States the unit has listed as their goals.
 	 */
-	private void addVertices(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
-			List<GoapState> goalState) {
+	private void addVertices(DirectedWeightedGraph<GraphNode, WeightedEdge> graph, List<GoapState> goalState) {
 		// The effects from the world state as well as the precondition of each
 		// goal have to be set at the beginning, since these are the effects the
 		// unit tries to archive with its actions. Also the startNode has to
@@ -203,15 +201,10 @@ public class GoapPlanner implements IGoapPlanner {
 	 * @param endNodes
 	 *            the end nodes, to which paths inside the graph lead to.
 	 */
-	private void addEdges(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph) {
+	private void addEdges(DirectedWeightedGraph<GraphNode, WeightedEdge> graph) {
 		Queue<GraphNode> nodesToWorkOn = new LinkedList<GraphNode>();
 
 		addDefaultEdges(graph, nodesToWorkOn);
-
-		// TODO: Possible Change: Add a HashSet to keep track of all nodes
-		// already
-		// connected once so that those nodes do not get added to the queue
-		// again. -> performance!
 
 		// Check each already connected once node against all other nodes to
 		// find a possible match between the combined effects of the path + the
@@ -240,14 +233,13 @@ public class GoapPlanner implements IGoapPlanner {
 	 *            the Queue in which nodes which got connected are getting added
 	 *            to.
 	 */
-	private void addDefaultEdges(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
-			Queue<GraphNode> nodesToWorkOn) {
+	private void addDefaultEdges(DirectedWeightedGraph<GraphNode, WeightedEdge> graph, Queue<GraphNode> nodesToWorkOn) {
 
-		// TODO: Possible Change: Remove graphNode.action != null
-		for (GraphNode graphNode : graph.vertexSet()) {
+		// graphNode.action != null -> start and ends
+		for (GraphNode graphNode : graph.getVertices()) {
 			if (!this.startNode.equals(graphNode) && graphNode.action != null && (graphNode.preconditions.isEmpty()
 					|| areAllPreconditionsMet(graphNode.preconditions, this.startNode.effects))) {
-				addEgdeWithWeigth(graph, this.startNode, graphNode, new DefaultWeightedEdge(), 0);
+				addEgdeWithWeigth(graph, this.startNode, graphNode, new WeightedEdge(), 0);
 				if (!nodesToWorkOn.contains(graphNode)) {
 					nodesToWorkOn.add(graphNode);
 				}
@@ -255,16 +247,16 @@ public class GoapPlanner implements IGoapPlanner {
 				// Add the path to the node to the GraphPath list in the node
 				// since this is the first step inside the graph.
 				List<GraphNode> vertices = new ArrayList<GraphNode>();
-				List<DefaultWeightedEdge> edges = new ArrayList<DefaultWeightedEdge>();
+				List<WeightedEdge> edges = new ArrayList<WeightedEdge>();
 
 				vertices.add(this.startNode);
 				vertices.add(graphNode);
 
 				edges.add(graph.getEdge(this.startNode, graphNode));
 
-				GraphPath<GraphNode, DefaultWeightedEdge> graphPathToDefaultNode = new GraphWalk<GraphNode, DefaultWeightedEdge>(
-						graph, this.startNode, graphNode, vertices, edges,
-						graph.getEdgeWeight(graph.getEdge(this.startNode, graphNode)));
+				WeightedPath<GraphNode, WeightedEdge> graphPathToDefaultNode = PathFactory.generateWeightedPath(graph,
+						this.startNode, graphNode, vertices, edges);
+
 				graphNode.addGraphPath(null, graphPathToDefaultNode);
 			}
 		}
@@ -307,10 +299,10 @@ public class GoapPlanner implements IGoapPlanner {
 	}
 
 	/**
-	 * Convenience function for adding a weighted edge to an existing graph.
+	 * Convenience function for adding a weighted edge to an existing Graph.
 	 * 
 	 * @param graph
-	 *            the graph the edge is added to.
+	 *            the Graph the edge is added to.
 	 * @param firstVertex
 	 *            start vertex.
 	 * @param secondVertex
@@ -322,8 +314,8 @@ public class GoapPlanner implements IGoapPlanner {
 	 * @return true or false depending if the creation of the edge was
 	 *         successful or not.
 	 */
-	private static <V, E> boolean addEgdeWithWeigth(SimpleDirectedWeightedGraph<V, E> graph, V firstVertex,
-			V secondVertex, E edge, double weight) {
+	private static <V, E extends WeightedEdge> boolean addEgdeWithWeigth(DirectedWeightedGraph<V, E> graph,
+			V firstVertex, V secondVertex, E edge, double weight) {
 		try {
 			graph.addEdge(firstVertex, secondVertex, edge);
 			graph.setEdgeWeight(graph.getEdge(firstVertex, secondVertex), weight);
@@ -350,11 +342,11 @@ public class GoapPlanner implements IGoapPlanner {
 	 * @return true or false depending on if the node was connected to another
 	 *         node.
 	 */
-	private boolean tryToConnectNode(SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph, GraphNode node,
+	private boolean tryToConnectNode(DirectedWeightedGraph<GraphNode, WeightedEdge> graph, GraphNode node,
 			Queue<GraphNode> nodesToWorkOn) {
 		boolean connected = false;
 
-		for (GraphNode otherNodeInGraph : graph.vertexSet()) {
+		for (GraphNode otherNodeInGraph : graph.getVertices()) {
 			// End nodes can not have a edge towards another node and the target
 			// node must not be itself. Also there must not already be an edge
 			// in the graph.
@@ -370,11 +362,11 @@ public class GoapPlanner implements IGoapPlanner {
 				// Every saved path to this node is checked if any of these
 				// produce a suitable effect set regarding the preconditions of
 				// the current node.
-				for (GraphPath<GraphNode, DefaultWeightedEdge> pathToListNode : node.pathsToThisNode) {
+				for (WeightedPath<GraphNode, WeightedEdge> pathToListNode : node.pathsToThisNode) {
 					if (areAllPreconditionsMet(otherNodeInGraph.preconditions, node.getEffectState(pathToListNode))) {
 						connected = true;
 
-						addEgdeWithWeigth(graph, node, otherNodeInGraph, new DefaultWeightedEdge(),
+						addEgdeWithWeigth(graph, node, otherNodeInGraph, new WeightedEdge(),
 								node.action.generateCost(this.goapUnit));
 
 						otherNodeInGraph.addGraphPath(pathToListNode,
@@ -382,9 +374,10 @@ public class GoapPlanner implements IGoapPlanner {
 
 						nodesToWorkOn.add(otherNodeInGraph);
 
-						// break; // TODO: Possible Change: If set then only one
-						// connection at a time can be made from each path to
-						// each node.
+						// break; // TODO: Possible Change: If enabled then only
+						// one Path from the currently checked node is
+						// transferred to another node. All other possible Paths
+						// will not be considered and not checked.
 					}
 				}
 			}
@@ -405,22 +398,16 @@ public class GoapPlanner implements IGoapPlanner {
 	 * @return a graphPath with a given node as the end element, updated
 	 *         vertexSet, edgeSet and weight.
 	 */
-	private static GraphPath<GraphNode, DefaultWeightedEdge> addNodeToGraphPath(
-			SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph,
-			GraphPath<GraphNode, DefaultWeightedEdge> baseGraphPath, GraphNode nodeToAdd) {
-		double weight = baseGraphPath.getWeight();
+	private static WeightedPath<GraphNode, WeightedEdge> addNodeToGraphPath(
+			DirectedWeightedGraph<GraphNode, WeightedEdge> graph, WeightedPath<GraphNode, WeightedEdge> baseGraphPath,
+			GraphNode nodeToAdd) {
 		List<GraphNode> vertices = new ArrayList<GraphNode>(baseGraphPath.getVertexList());
-		List<DefaultWeightedEdge> edges = new ArrayList<DefaultWeightedEdge>(baseGraphPath.getEdgeList());
-
-		if (nodeToAdd.action != null) {
-			weight += graph.getEdgeWeight(graph.getEdge(baseGraphPath.getEndVertex(), nodeToAdd));
-		}
+		List<WeightedEdge> edges = new ArrayList<WeightedEdge>(baseGraphPath.getEdgeList());
 
 		vertices.add(nodeToAdd);
 		edges.add(graph.getEdge(baseGraphPath.getEndVertex(), nodeToAdd));
 
-		return new GraphWalk<GraphNode, DefaultWeightedEdge>(graph, baseGraphPath.getStartVertex(), nodeToAdd, vertices,
-				edges, weight);
+		return PathFactory.generateWeightedPath(graph, baseGraphPath.getStartVertex(), nodeToAdd, vertices, edges);
 	}
 
 	// ------------------------------ Search the graph for a Queue of
@@ -437,8 +424,7 @@ public class GoapPlanner implements IGoapPlanner {
 	 * @return the Queue of GoapActions which has the lowest cost to archive a
 	 *         goal.
 	 */
-	private Queue<GoapAction> searchGraphForActionQueue(
-			SimpleDirectedWeightedGraph<GraphNode, DefaultWeightedEdge> graph) {
+	private Queue<GoapAction> searchGraphForActionQueue(DirectedWeightedGraph<GraphNode, WeightedEdge> graph) {
 		Queue<GoapAction> actionQueue = null;
 
 		for (int i = 0; i < this.endNodes.size() && actionQueue == null; i++) {
@@ -460,12 +446,11 @@ public class GoapPlanner implements IGoapPlanner {
 	 *            the node whose paths leading to it are being sorted.
 	 */
 	private static void sortPathsLeadingToNode(GraphNode node) {
-		node.pathsToThisNode.sort(new Comparator<GraphPath<GraphNode, DefaultWeightedEdge>>() {
+		node.pathsToThisNode.sort(new Comparator<WeightedPath<GraphNode, WeightedEdge>>() {
 
 			@Override
-			public int compare(GraphPath<GraphNode, DefaultWeightedEdge> o1,
-					GraphPath<GraphNode, DefaultWeightedEdge> o2) {
-				return ((Double) o1.getWeight()).compareTo(o2.getWeight());
+			public int compare(WeightedPath<GraphNode, WeightedEdge> o1, WeightedPath<GraphNode, WeightedEdge> o2) {
+				return ((Double) o1.getTotalWeight()).compareTo(o2.getTotalWeight());
 			}
 		});
 	}
@@ -474,14 +459,14 @@ public class GoapPlanner implements IGoapPlanner {
 	 * Function for extracting all Actions from a GraphPath.
 	 * 
 	 * @param path
-	 *            the path from which the actions are being extracted.
+	 *            the Path from which the actions are being extracted.
 	 * @param startNode
 	 *            the starting node needs to be known as it contains no action.
 	 * @param endNode
 	 *            the end node needs to be known since it contains no action.
 	 * @return a Queue in which all actions from the given path are listed.
 	 */
-	private static Queue<GoapAction> extractActionsFromGraphPath(GraphPath<GraphNode, DefaultWeightedEdge> path,
+	private static Queue<GoapAction> extractActionsFromGraphPath(WeightedPath<GraphNode, WeightedEdge> path,
 			GraphNode startNode, GraphNode endNode) {
 		Queue<GoapAction> actionQueue = new LinkedList<GoapAction>();
 

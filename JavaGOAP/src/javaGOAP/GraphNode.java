@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.jgrapht.GraphPath;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import graph.WeightedEdge;
+import graph.WeightedPath;
+
 
 /**
  * GraphNode.java --- Node on the JGraph
@@ -19,8 +20,8 @@ class GraphNode {
 
 	HashSet<GoapState> preconditions;
 	HashSet<GoapState> effects;
-	List<GraphPath<GraphNode, DefaultWeightedEdge>> pathsToThisNode = new ArrayList<GraphPath<GraphNode, DefaultWeightedEdge>>();
-	private Hashtable<GraphPath<GraphNode, DefaultWeightedEdge>, HashSet<GoapState>> storedEffectStates = new Hashtable<>();
+	List<WeightedPath<GraphNode, WeightedEdge>> pathsToThisNode = new ArrayList<WeightedPath<GraphNode, WeightedEdge>>();
+	private Hashtable<WeightedPath<GraphNode, WeightedEdge>, HashSet<GoapState>> storedEffectStates = new Hashtable<>();
 
 	/**
 	 * @param preconditions
@@ -76,15 +77,15 @@ class GraphNode {
 	 * @param newPath
 	 *            the path with which the node is accessed.
 	 */
-	void addGraphPath(GraphPath<GraphNode, DefaultWeightedEdge> pathToPreviousNode,
-			GraphPath<GraphNode, DefaultWeightedEdge> newPath) {
+	void addGraphPath(WeightedPath<GraphNode, WeightedEdge> pathToPreviousNode,
+			WeightedPath<GraphNode, WeightedEdge> newPath) {
 		List<GraphNode> newPathNodeList = newPath.getVertexList();
 		boolean notInSet = true;
 
 		if (this.pathsToThisNode.isEmpty()) {
 			notInSet = true;
 		} else {
-			for (GraphPath<GraphNode, DefaultWeightedEdge> storedPath : this.pathsToThisNode) {
+			for (WeightedPath<GraphNode, WeightedEdge> storedPath : this.pathsToThisNode) {
 				List<GraphNode> nodeList = storedPath.getVertexList();
 				boolean isSamePath = true;
 
@@ -122,8 +123,8 @@ class GraphNode {
 	 *            the path on which all effects are getting added together.
 	 * @return the HashSet of effects at the last node in the path.
 	 */
-	private HashSet<GoapState> addPathEffectsTogether(GraphPath<GraphNode, DefaultWeightedEdge> pathToPreviousNode,
-			GraphPath<GraphNode, DefaultWeightedEdge> path) {
+	private HashSet<GoapState> addPathEffectsTogether(WeightedPath<GraphNode, WeightedEdge> pathToPreviousNode,
+			WeightedPath<GraphNode, WeightedEdge> path) {
 		HashSet<GoapState> combinedNodeEffects;
 		List<GoapState> statesToBeRemoved = new ArrayList<GoapState>();
 
@@ -159,7 +160,7 @@ class GraphNode {
 
 	// ------------------------------ Getter / Setter
 
-	HashSet<GoapState> getEffectState(GraphPath<GraphNode, DefaultWeightedEdge> pathKey) {
+	HashSet<GoapState> getEffectState(WeightedPath<GraphNode, WeightedEdge> pathKey) {
 		return this.storedEffectStates.get(pathKey);
 	}
 }

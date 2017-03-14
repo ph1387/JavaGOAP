@@ -2,7 +2,7 @@ package graph;
 
 
 /**
- * WeightedGraph.java --- A WeightedGraph using WeightedEdgdes as edges.
+ * WeightedGraph.java --- A WeightedGraph using WeightedEdges as edges.
  * 
  * @author P H - 14.03.2017
  *

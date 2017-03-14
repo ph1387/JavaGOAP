@@ -22,8 +22,8 @@ public class PathFactory {
 		}
 	}
 
-	public static <VertexType, EdgeType extends WeightedEdge> Path<VertexType, EdgeType> generateWeightedPath(
-			DirectedGraph<VertexType, EdgeType> graph, VertexType start, VertexType end, List<VertexType> vertexList,
+	public static <VertexType, EdgeType extends WeightedEdge> WeightedPath<VertexType, EdgeType> generateWeightedPath(
+			DirectedWeightedGraph<VertexType, EdgeType> graph, VertexType start, VertexType end, List<VertexType> vertexList,
 			List<EdgeType> edgeList) {
 		if (validateStartAndEnd(start, end, vertexList) && validateConnections(graph, vertexList, edgeList)) {
 			return new WeightedPath<VertexType, EdgeType>(vertexList, edgeList, start, end);

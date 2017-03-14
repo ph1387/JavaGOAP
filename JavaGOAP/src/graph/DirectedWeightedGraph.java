@@ -7,7 +7,7 @@ package graph;
  * @author P H - 14.03.2017
  *
  */
-public class WeightedGraph<VertexType, EdgeType extends WeightedEdge> extends Graph<VertexType, EdgeType> {
+public class DirectedWeightedGraph<VertexType, EdgeType extends WeightedEdge> extends DirectedGraph<VertexType, EdgeType> {
 
 	// -------------------- Functions
 

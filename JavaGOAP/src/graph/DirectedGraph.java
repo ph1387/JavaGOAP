@@ -10,14 +10,14 @@ import java.util.function.BiConsumer;
  * @author P H - 14.03.2017
  *
  */
-public class Graph<VertexType, EdgeType extends Edge> {
+public class DirectedGraph<VertexType, EdgeType extends Edge> {
 	protected HashMap<VertexType, HashMap<VertexType, EdgeType>> graphContent = new HashMap<VertexType, HashMap<VertexType, EdgeType>>();
 
-	public Graph() {
+	public DirectedGraph() {
 
 	}
 
-	public Graph(HashSet<VertexType> vertices) {
+	public DirectedGraph(HashSet<VertexType> vertices) {
 		for (VertexType vertex : vertices) {
 			this.graphContent.put(vertex, new HashMap<VertexType, EdgeType>());
 		}

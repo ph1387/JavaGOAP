@@ -13,7 +13,7 @@ public class PathFactory {
 	// -------------------- Functions
 
 	public static <VertexType, EdgeType extends Edge> Path<VertexType, EdgeType> generatePath(
-			Graph<VertexType, EdgeType> graph, VertexType start, VertexType end, List<VertexType> vertexList,
+			DirectedGraph<VertexType, EdgeType> graph, VertexType start, VertexType end, List<VertexType> vertexList,
 			List<EdgeType> edgeList) {
 		if (validateStartAndEnd(start, end, vertexList) && validateConnections(graph, vertexList, edgeList)) {
 			return new Path<VertexType, EdgeType>(vertexList, edgeList, start, end);
@@ -23,7 +23,7 @@ public class PathFactory {
 	}
 
 	public static <VertexType, EdgeType extends WeightedEdge> Path<VertexType, EdgeType> generateWeightedPath(
-			Graph<VertexType, EdgeType> graph, VertexType start, VertexType end, List<VertexType> vertexList,
+			DirectedGraph<VertexType, EdgeType> graph, VertexType start, VertexType end, List<VertexType> vertexList,
 			List<EdgeType> edgeList) {
 		if (validateStartAndEnd(start, end, vertexList) && validateConnections(graph, vertexList, edgeList)) {
 			return new WeightedPath<VertexType, EdgeType>(vertexList, edgeList, start, end);
@@ -38,7 +38,7 @@ public class PathFactory {
 				&& vertexList.get(vertexList.size() - 1).equals(end);
 	}
 
-	protected static <VertexType, EdgeType extends Edge> boolean validateConnections(Graph<VertexType, EdgeType> graph,
+	protected static <VertexType, EdgeType extends Edge> boolean validateConnections(DirectedGraph<VertexType, EdgeType> graph,
 			List<VertexType> vertexList, List<EdgeType> edgeList) {
 		boolean success = true;
 		VertexType previousVertex = null;

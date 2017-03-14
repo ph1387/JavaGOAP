@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import graph.Edge;
-import graph.Graph;
+import graph.DirectedGraph;
 import graph.Path;
 import graph.PathFactory;
 
@@ -14,12 +14,12 @@ import graph.PathFactory;
  * @author P H - 14.03.2017
  *
  */
-public class GraphTest {
+public class DirectedGraphTest {
 
 	@Test
 	public void vertices() {
 		int vertexCount = 5;
-		Graph<Integer, Edge> g = createBasicTestGraph(vertexCount);
+		DirectedGraph<Integer, Edge> g = createBasicTestGraph(vertexCount);
 		
 		assertNotEquals(null, g);
 		assertNotEquals(null, g.getVertices());
@@ -31,7 +31,7 @@ public class GraphTest {
 	public void edges() {
 		int vertexCount = 5;
 		int edgeCount = 2;
-		Graph<Integer, Edge> g = createBasicConnectedTestGraph(vertexCount, edgeCount);
+		DirectedGraph<Integer, Edge> g = createBasicConnectedTestGraph(vertexCount, edgeCount);
 		
 		assertTrue(g.containsEdge(0, 1));
 		assertFalse(g.containsEdge(3, 4));
@@ -44,8 +44,8 @@ public class GraphTest {
 		assertTrue(g.getEdges().size() == (edgeCount - 1));
 	}
 	
-	public static Graph<Integer, Edge> createBasicTestGraph(int vertexCount) {
-		Graph<Integer, Edge> g = new Graph<Integer, Edge>();
+	public static DirectedGraph<Integer, Edge> createBasicTestGraph(int vertexCount) {
+		DirectedGraph<Integer, Edge> g = new DirectedGraph<Integer, Edge>();
 
 		for (int i = 0; i < vertexCount; i++) {
 			g.addVertex(i);
@@ -54,8 +54,8 @@ public class GraphTest {
 		return g;
 	}
 	
-	public static Graph<Integer, Edge> createBasicConnectedTestGraph(int vertexCount, int edgeCount) {
-		Graph<Integer, Edge> g = createBasicTestGraph(vertexCount);
+	public static DirectedGraph<Integer, Edge> createBasicConnectedTestGraph(int vertexCount, int edgeCount) {
+		DirectedGraph<Integer, Edge> g = createBasicTestGraph(vertexCount);
 		
 		for(int i = 0; i < edgeCount; i++) {
 			g.addEdge(i, i + 1, new Edge());

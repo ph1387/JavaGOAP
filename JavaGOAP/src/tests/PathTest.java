@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.Test;
 
 import graph.Edge;
-import graph.Graph;
+import graph.DirectedGraph;
 import graph.Path;
 import graph.PathFactory;
 
@@ -36,7 +36,7 @@ public class PathTest {
 	}
 
 	public static Path<Integer, Edge> createBasicTestPath(int vertexCount, int edgeCount) {
-		Graph<Integer, Edge> g = GraphTest.createBasicConnectedTestGraph(vertexCount, edgeCount);
+		DirectedGraph<Integer, Edge> g = DirectedGraphTest.createBasicConnectedTestGraph(vertexCount, edgeCount);
 
 		// Vertices and edges retrieved with a breadthSearch or DepthSearch
 		// would be better / ideal.

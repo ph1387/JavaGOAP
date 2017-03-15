@@ -1,13 +1,14 @@
 package tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import java.util.Queue;
 
 import org.junit.Test;
 
+import javaGOAP.DefaultGoapPlanner;
 import javaGOAP.GoapAction;
-import javaGOAP.GoapPlanner;
 import javaGOAP.IGoapPlanner;
 
 /**
@@ -108,7 +109,7 @@ public class GoapPlannerTest {
 	 * @return the IGoapPlanner that is currently being tested.
 	 */
 	public static IGoapPlanner getTestingGoapPlanner() {
-		return new GoapPlanner();
+		return new DefaultGoapPlanner();
 	}
 
 	public static TestUnit generateBaseTestUnit() {

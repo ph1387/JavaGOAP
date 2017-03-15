@@ -19,8 +19,8 @@ public class DefaultGoapAgent extends GoapAgent {
 	}
 
 	@Override
-	protected IGoapPlanner createPlanner() {
-		return new GoapPlanner();
+	protected IGoapPlanner generatePlannerObject() {
+		return new DefaultGoapPlanner();
 	}
 
 }

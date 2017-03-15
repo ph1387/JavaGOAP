@@ -20,7 +20,7 @@ public abstract class GoapAgent
 	 */
 	public GoapAgent(IGoapUnit assignedUnit) {
 		this.assignedGoapUnit = assignedUnit;
-		this.idleState = new IdleState(this.createPlanner());
+		this.idleState = new IdleState(this.generatePlannerObject());
 
 		// Only subclasses of the own GoapUnit are able to emit events
 		if (this.assignedGoapUnit instanceof GoapUnit) {
@@ -48,7 +48,7 @@ public abstract class GoapAgent
 	 * @return the used planner instance implementing the IGoapPlanner
 	 *         interface.
 	 */
-	protected abstract IGoapPlanner createPlanner();
+	protected abstract IGoapPlanner generatePlannerObject();
 
 	// ------------------------------ Getter / Setter
 

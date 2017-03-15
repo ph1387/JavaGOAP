@@ -8,13 +8,12 @@ import java.util.List;
 import javaGOAP.graph.WeightedEdge;
 import javaGOAP.graph.WeightedPath;
 
-
 /**
- * GraphNode.java --- Vertex on the used Graph.
+ * GraphNode.java --- Vertex on the used DefaultGraph / -Planner.
  * 
  * @author P H - 28.01.2017
  */
-class GraphNode {
+public class GraphNode {
 
 	GoapAction action = null;
 

@@ -11,7 +11,7 @@ import javaGOAP.IGoapUnit;
  *
  */
 public class TestActionOne extends GoapAction {
-
+	
 	public TestActionOne(Object target) {
 		super(target);
 		
@@ -21,12 +21,12 @@ public class TestActionOne extends GoapAction {
 
 	@Override
 	protected boolean isDone(IGoapUnit goapUnit) {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected boolean performAction(IGoapUnit goapUnit) {
-		return false;
+		return true;
 	}
 
 	@Override

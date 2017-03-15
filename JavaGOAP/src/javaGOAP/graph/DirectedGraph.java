@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.function.BiConsumer;
 
 /**
- * Graph.java --- Superclass for all Graphs.
+ * DirectedGraph.java --- Superclass for all DirectedGraphs.
  * 
  * @author P H - 14.03.2017
  *
  */
-public class DirectedGraph<VertexType, EdgeType extends Edge> {
+public class DirectedGraph<VertexType, EdgeType extends Edge> implements IGraph<VertexType, EdgeType> {
 	protected HashMap<VertexType, HashMap<VertexType, EdgeType>> graphContent = new HashMap<VertexType, HashMap<VertexType, EdgeType>>();
 
 	public DirectedGraph() {
@@ -29,41 +29,19 @@ public class DirectedGraph<VertexType, EdgeType extends Edge> {
 
 	// -------------------- Functions
 
-	/**
-	 * Function for adding a vertex to the Graph.
-	 * 
-	 * @param vertex
-	 *            the vertex being added.
-	 */
+	@Override
 	public void addVertex(VertexType vertex) {
 		this.graphContent.put(vertex, new HashMap<VertexType, EdgeType>());
 	}
 
-	/**
-	 * Function for adding a edge to the Graph.
-	 * 
-	 * @param firstVertex
-	 *            the vertex from which the edge is coming from.
-	 * @param secondVertex
-	 *            the vertex the edge is going to.
-	 * @param edge
-	 *            the edge itself that is going to be added.
-	 */
+	@Override
 	public void addEdge(VertexType firstVertex, VertexType secondVertex, EdgeType edge) {
 		HashMap<VertexType, EdgeType> connectionsToVertex = this.graphContent.get(firstVertex);
 
 		connectionsToVertex.put(secondVertex, edge);
 	}
 
-	/**
-	 * Function to testing if an edge exists inside a Graph.
-	 * 
-	 * @param firstVertex
-	 *            the vertex from which the edge is coming from.
-	 * @param secondVertex
-	 *            the vertex the edge is going to.
-	 * @return true or false depending if the edge exists.
-	 */
+	@Override
 	public boolean containsEdge(VertexType firstVertex, VertexType secondVertex) {
 		HashMap<VertexType, EdgeType> connectionsToVertex = this.graphContent.get(firstVertex);
 
@@ -73,14 +51,7 @@ public class DirectedGraph<VertexType, EdgeType extends Edge> {
 		return false;
 	}
 
-	/**
-	 * Function for removing an edge from a Graph.
-	 * 
-	 * @param firstVertex
-	 *            the vertex from which the edge is coming from.
-	 * @param secondVertex
-	 *            the vertex the edge is going to.
-	 */
+	@Override
 	public void removeEdge(VertexType firstVertex, VertexType secondVertex) {
 		HashMap<VertexType, EdgeType> connectionsToVertex = this.graphContent.get(firstVertex);
 
@@ -91,11 +62,7 @@ public class DirectedGraph<VertexType, EdgeType extends Edge> {
 
 	// ------------------------------ Getter / Setter
 
-	/**
-	 * Function for retrieving all vertices inside the Graph.
-	 * 
-	 * @return all vertices inside the Graph.
-	 */
+	@Override
 	public HashSet<VertexType> getVertices() {
 		final HashSet<VertexType> vertices = new HashSet<>();
 
@@ -109,11 +76,7 @@ public class DirectedGraph<VertexType, EdgeType extends Edge> {
 		return vertices;
 	}
 
-	/**
-	 * Function for retrieving all edges inside the Graph.
-	 * 
-	 * @return all edges inside the Graph.
-	 */
+	@Override
 	public HashSet<EdgeType> getEdges() {
 		final HashSet<VertexType> vertices = this.getVertices();
 		final HashSet<EdgeType> edges = new HashSet<>();
@@ -132,15 +95,7 @@ public class DirectedGraph<VertexType, EdgeType extends Edge> {
 		return edges;
 	}
 
-	/**
-	 * Function for retrieving a specific edge in the Graph.
-	 * 
-	 * @param firstVertex
-	 *            the vertex from which the edge is coming from.
-	 * @param secondVertex
-	 *            the vertex the edge is going to.
-	 * @return the desired edge or null, if none is found.
-	 */
+	@Override
 	public EdgeType getEdge(VertexType firstVertex, VertexType secondVertex) {
 		HashMap<VertexType, EdgeType> connectionsToVertex = this.graphContent.get(firstVertex);
 

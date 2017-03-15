@@ -10,7 +10,7 @@ import javaGOAP.graph.WeightedPath;
 
 
 /**
- * GraphNode.java --- Node on the JGraph
+ * GraphNode.java --- Vertex on the used Graph.
  * 
  * @author P H - 28.01.2017
  */

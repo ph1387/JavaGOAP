@@ -59,13 +59,6 @@ public abstract class GoapAgent
 	// -------------------- Eventlisteners
 
 	// ------------------------------ IdleState
-	/**
-	 * This event is needed to push real action Queues on the FSM-Stack. Has to
-	 * pop the FSM-Stack, since the event fires before the return value of the
-	 * state gets checked.
-	 * 
-	 * @see javaGOAP.PlanCreatedEventListener#onPlanCreated(java.util.Queue)
-	 */
 	@Override
 	public void onPlanCreated(Queue<GoapAction> plan) {
 		this.assignedGoapUnit.goapPlanFound(plan);
@@ -75,18 +68,6 @@ public abstract class GoapAgent
 	}
 
 	// ------------------------------ GoapUnit
-	/**
-	 * This event is needed to change a current goal to a new one, while keeping
-	 * the old one on the FSM-Stack for its later execution. The importance is
-	 * set to the highest possible value to ensure that the given goal is the
-	 * main one of the unit. This causes the Idle Stack to create a Queue
-	 * specifically for this GoapState, which is empty if no valid Queue is
-	 * found (null not possible since that would result in the IdleState to try
-	 * until one is found). The empty Queue causes the unit to proceed with its
-	 * previous action.
-	 *
-	 * @see javaGOAP.ImportantUnitChangeEventListener#onImportantUnitGoalChange(javaGOAP.GoapState)
-	 */
 	@Override
 	public void onImportantUnitGoalChange(GoapState newGoalState) {
 		newGoalState.importance = Integer.MAX_VALUE;

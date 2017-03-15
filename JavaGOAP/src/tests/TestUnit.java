@@ -12,9 +12,9 @@ import javaGOAP.GoapUnit;
  *
  */
 public class TestUnit extends GoapUnit {
-	public TestActionOne tOne = new TestActionOne(null);
-	public TestActionTwo tTwo = new TestActionTwo(null);
-	public TestActionThree tThree = new TestActionThree(null);
+	public TestActionOne tOne = new TestActionOne(1);
+	public TestActionTwo tTwo = new TestActionTwo(1);
+	public TestActionThree tThree = new TestActionThree(1);
 	public GoapState goalS = new GoapState(1, "goal", true);
 	public GoapState worldS = new GoapState(0, "goal", false);
 	

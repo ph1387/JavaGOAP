@@ -1,7 +1,7 @@
 package javaGOAP;
 
 /**
- * MoveToState.java --- State on the FSM Stack
+ * MoveToState.java --- State on the FSM Stack.
  * 
  * @author P H - 28.01.2017
  */

@@ -9,7 +9,6 @@ import javaGOAP.IGoapUnit;
  *
  */
 public class TestActionThree extends TestActionOne {
-
 	public TestActionThree(Object target) {
 		super(target);
 		
@@ -21,5 +20,4 @@ public class TestActionThree extends TestActionOne {
 	protected float generateBaseCost(IGoapUnit goapUnit) {
 		return 0;
 	}
-	
 }

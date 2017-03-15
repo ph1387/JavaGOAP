@@ -28,13 +28,11 @@ public class GoapPlanner implements IGoapPlanner {
 
 	/**
 	 * Generate a plan (Queue of GoapActions) which is then performed by the
-	 * assigned GoapUnit. The planner uses the JGraphT library to create a
-	 * directed-weighted graph. A search algorithm is not needed as each node
-	 * contains each path to itself. Therefore each goal contains a list of
-	 * paths leading starting from the worldState through multiple node directly
-	 * to itself. The goals and their paths can be sorted according to these
-	 * paths and the importance of each goal with the weight provided by each
-	 * node inside the graph.
+	 * assigned GoapUnit. A search algorithm is not needed as each node contains
+	 * each path to itself. Therefore each goal contains a list of paths leading
+	 * starting from the worldState through multiple node directly to it. The
+	 * goals and their paths can be sorted according to these and the importance
+	 * of each goal with the weight provided by each node inside the graph.
 	 * 
 	 * @param goapUnit
 	 *            the GoapUnit the plan gets generated for.

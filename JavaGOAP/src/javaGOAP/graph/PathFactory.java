@@ -1,6 +1,5 @@
 package javaGOAP.graph;
 
-// TODO: UML
 import java.util.List;
 
 /**

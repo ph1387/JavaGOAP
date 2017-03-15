@@ -1,6 +1,5 @@
 package javaGOAP.graph;
 
-// TODO: UML
 /**
  * IWeightedGraph.java --- Interface for a basic WeightedGraph.
  * 

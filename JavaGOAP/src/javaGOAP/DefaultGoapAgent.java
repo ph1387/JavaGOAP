@@ -5,7 +5,6 @@ import javaGOAP.GoapPlanner;
 import javaGOAP.IGoapPlanner;
 import javaGOAP.IGoapUnit;
 
-//TODO UML
 /**
  * DefaultGoapAgent.java --- The Default implementation of the GoapAgent. Only
  * the IGoapUnit has to be assigned.

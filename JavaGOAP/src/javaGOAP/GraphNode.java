@@ -1,8 +1,8 @@
 package javaGOAP;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 
 import javaGOAP.graph.WeightedEdge;
@@ -21,7 +21,7 @@ class GraphNode {
 	HashSet<GoapState> preconditions;
 	HashSet<GoapState> effects;
 	List<WeightedPath<GraphNode, WeightedEdge>> pathsToThisNode = new ArrayList<WeightedPath<GraphNode, WeightedEdge>>();
-	private Hashtable<WeightedPath<GraphNode, WeightedEdge>, HashSet<GoapState>> storedEffectStates = new Hashtable<>();
+	private HashMap<WeightedPath<GraphNode, WeightedEdge>, HashSet<GoapState>> storedEffectStates = new HashMap<>();
 
 	/**
 	 * @param preconditions

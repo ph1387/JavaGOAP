@@ -64,7 +64,7 @@ public abstract class GoapAgent
 	 * pop the FSM-Stack, since the event fires before the return value of the
 	 * state gets checked.
 	 * 
-	 * @see unitControlModule.goapActionTaking.PlanCreatedEventListener#onPlanCreated(java.util.Queue)
+	 * @see javaGOAP.PlanCreatedEventListener#onPlanCreated(java.util.Queue)
 	 */
 	@Override
 	public void onPlanCreated(Queue<GoapAction> plan) {
@@ -84,8 +84,8 @@ public abstract class GoapAgent
 	 * found (null not possible since that would result in the IdleState to try
 	 * until one is found). The empty Queue causes the unit to proceed with its
 	 * previous action.
-	 * 
-	 * @see unitControlModule.goapActionTaking.ImportantUnitChangeEventListener#onImportantUnitGoalChange(unitControlModule.goapActionTaking.GoapState)
+	 *
+	 * @see javaGOAP.ImportantUnitChangeEventListener#onImportantUnitGoalChange(javaGOAP.GoapState)
 	 */
 	@Override
 	public void onImportantUnitGoalChange(GoapState newGoalState) {

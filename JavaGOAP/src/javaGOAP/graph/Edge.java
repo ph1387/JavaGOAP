@@ -1,4 +1,4 @@
-package graph;
+package javaGOAP.graph;
 
 /**
  * EdgeType.java --- Superclass for all edges.

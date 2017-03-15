@@ -1,4 +1,4 @@
-package graph;
+package javaGOAP.graph;
 
 /**
  * WeightedEdge.java --- A WeightedEdge for a Graph.

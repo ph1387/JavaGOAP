@@ -7,11 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import graph.DirectedWeightedGraph;
-import graph.Edge;
-import graph.PathFactory;
-import graph.WeightedEdge;
-import graph.WeightedPath;
+import javaGOAP.graph.DirectedWeightedGraph;
+import javaGOAP.graph.Edge;
+import javaGOAP.graph.PathFactory;
+import javaGOAP.graph.WeightedEdge;
+import javaGOAP.graph.WeightedPath;
 
 /**
  * GoapPlanner.java --- Class for generating a Queue of GoapActions using the

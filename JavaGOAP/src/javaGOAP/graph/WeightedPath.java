@@ -1,4 +1,4 @@
-package graph;
+package javaGOAP.graph;
 
 import java.util.List;
 
@@ -21,6 +21,9 @@ public class WeightedPath<VertexType, EdgeType extends WeightedEdge> extends Pat
 	}
 	// -------------------- Functions
 
+	/**
+	 * @return the sum of all edge-weights inside the WeightedPath.
+	 */
 	public double getTotalWeight() {
 		return totalWeight;
 	}

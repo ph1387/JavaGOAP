@@ -134,6 +134,9 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
+	 * @param importance the importance of the precondition being added.
+	 * @param effect the effect of the precondition being added.
+	 * @param value the value of the precondition being added.
 	 * @see #addPrecondition(GoapState precondition)
 	 */
 	protected void addPrecondition(int importance, String effect, Object value) {
@@ -163,7 +166,9 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
+	 * @param precondition the precondition that is being removed.
 	 * @see #removePrecondition(String preconditionEffect)
+	 * @return true or false depending if the precondition was removed successfully.
 	 */
 	protected boolean removePrecondition(GoapState precondition) {
 		return this.removePrecondition(precondition.effect);
@@ -198,6 +203,9 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
+	 * @param importance the importance of the effect being added.
+	 * @param effect the effect of the effect being added.
+	 * @param value the value of the effect being added.
 	 * @see #addEffect(GoapState effect)
 	 */
 	protected void addEffect(int importance, String effect, Object value) {
@@ -227,7 +235,10 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
+	 * @param effect the effect that is being removed.
 	 * @see #removeEffect(String effectEffect)
+	 * @return true or false depending if the effect was removed successfully.
+	 * 
 	 */
 	protected boolean removeEffect(GoapState effect) {
 		return this.removeEffect(effect.effect);

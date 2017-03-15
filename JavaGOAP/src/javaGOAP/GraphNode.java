@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
-import graph.WeightedEdge;
-import graph.WeightedPath;
+import javaGOAP.graph.WeightedEdge;
+import javaGOAP.graph.WeightedPath;
 
 
 /**

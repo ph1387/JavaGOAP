@@ -1,4 +1,4 @@
-package graph;
+package javaGOAP.graph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,16 @@ public class Path<VertexType, EdgeType extends Edge> {
 
 	// ------------------------------ Getter / Setter
 
+	/**
+	 * @return a List containing all vertices of the Path.
+	 */
 	public List<VertexType> getVertexList() {
 		return vertexList;
 	}
 
+	/**
+	 * @return a List containing all edges of the Path.
+	 */
 	public List<EdgeType> getEdgeList() {
 		return edgeList;
 	}

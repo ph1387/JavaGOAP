@@ -17,7 +17,7 @@ public class PathFactory {
 	 * Function for generating a simple Path. The given information are being
 	 * checked against the given Graph.
 	 * 
-	 * @param IGraph
+	 * @param graph
 	 *            the Graph the information are being checked against.
 	 * @param start
 	 *            the starting vertex of the Path.
@@ -50,7 +50,7 @@ public class PathFactory {
 	 * Function for generating a WeightedPath. The given information are being
 	 * checked against the given Graph.
 	 * 
-	 * @param IGraph
+	 * @param graph
 	 *            the Graph the information are being checked against.
 	 * @param start
 	 *            the starting vertex of the WeightedPath.
@@ -104,7 +104,7 @@ public class PathFactory {
 	/**
 	 * Function for validating all vertices and edges of the given Lists.
 	 * 
-	 * @param IGraph
+	 * @param graph
 	 *            the graph the information is being checked against.
 	 * @param vertexList
 	 *            the List of all vertices of the Path being created.

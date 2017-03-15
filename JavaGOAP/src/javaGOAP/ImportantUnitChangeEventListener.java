@@ -10,6 +10,9 @@ interface ImportantUnitChangeEventListener {
 	 * found (null not possible since that would result in the IdleState to try
 	 * until one is found). The empty Queue causes the unit to proceed with its
 	 * previous action.
+	 * 
+	 * @param newGoalState
+	 *            the new goal that the GoapUnit is going to accomplish.
 	 */
 	public void onImportantUnitGoalChange(GoapState newGoalState);
 

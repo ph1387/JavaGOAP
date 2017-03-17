@@ -54,6 +54,11 @@ public class TestActionOne extends GoapAction {
 		return false;
 	}
 
+	@Override
+	protected void reset() {
+		
+	}
+
 	// ------------------------------ Custom test functions
 
 }

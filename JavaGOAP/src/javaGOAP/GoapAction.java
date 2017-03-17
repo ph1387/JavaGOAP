@@ -118,6 +118,13 @@ public abstract class GoapAction {
 	 */
 	protected abstract boolean isInRange(IGoapUnit goapUnit);
 
+	/**
+	 * Function used to reset an action. Gets called once the Action finishes
+	 * or, if the GoapUnit class was used, when the Stack on the FSM gets
+	 * reseted.
+	 */
+	protected abstract void reset();
+
 	// ------------------------------ Getter / Setter
 
 	protected HashSet<GoapState> getPreconditions() {
@@ -134,9 +141,12 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
-	 * @param importance the importance of the precondition being added.
-	 * @param effect the effect of the precondition being added.
-	 * @param value the value of the precondition being added.
+	 * @param importance
+	 *            the importance of the precondition being added.
+	 * @param effect
+	 *            the effect of the precondition being added.
+	 * @param value
+	 *            the value of the precondition being added.
 	 * @see #addPrecondition(GoapState precondition)
 	 */
 	protected void addPrecondition(int importance, String effect, Object value) {
@@ -166,9 +176,11 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
-	 * @param precondition the precondition that is being removed.
+	 * @param precondition
+	 *            the precondition that is being removed.
 	 * @see #removePrecondition(String preconditionEffect)
-	 * @return true or false depending if the precondition was removed successfully.
+	 * @return true or false depending if the precondition was removed
+	 *         successfully.
 	 */
 	protected boolean removePrecondition(GoapState precondition) {
 		return this.removePrecondition(precondition.effect);
@@ -203,9 +215,12 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
-	 * @param importance the importance of the effect being added.
-	 * @param effect the effect of the effect being added.
-	 * @param value the value of the effect being added.
+	 * @param importance
+	 *            the importance of the effect being added.
+	 * @param effect
+	 *            the effect of the effect being added.
+	 * @param value
+	 *            the value of the effect being added.
 	 * @see #addEffect(GoapState effect)
 	 */
 	protected void addEffect(int importance, String effect, Object value) {
@@ -235,7 +250,8 @@ public abstract class GoapAction {
 	/**
 	 * Overloaded function for convenience.
 	 * 
-	 * @param effect the effect that is being removed.
+	 * @param effect
+	 *            the effect that is being removed.
 	 * @see #removeEffect(String effectEffect)
 	 * @return true or false depending if the effect was removed successfully.
 	 * 

@@ -41,7 +41,7 @@ class RunActionState implements IFSMState {
 			
 			while (missingAction) {
 				if (!this.currentActions.isEmpty() && this.currentActions.peek().isDone(goapUnit)) {
-					this.currentActions.poll();
+					this.currentActions.poll().reset();
 				} else {
 					missingAction = false;
 				}

@@ -1,5 +1,6 @@
 package javaGOAP;
 
+import java.util.HashSet;
 import java.util.Queue;
 
 /**
@@ -77,6 +78,13 @@ public abstract class GoapAgent
 
 	@Override
 	public void onImportantUnitStackResetChange() {
+		HashSet<GoapAction> actions = this.assignedGoapUnit.getAvailableActions();
+		
+		// Reset all actions of the IGoapUnit.
+		for (GoapAction goapAction : actions) {
+			goapAction.reset();
+		}
+		
 		this.fsm.clearStack();
 		this.fsm.pushStack(this.idleState);
 	}

@@ -38,7 +38,7 @@ class RunActionState implements IFSMState {
 
 		try {
 			boolean missingAction = true;
-			
+
 			while (missingAction) {
 				if (!this.currentActions.isEmpty() && this.currentActions.peek().isDone(goapUnit)) {
 					this.currentActions.poll().reset();
@@ -51,16 +51,18 @@ class RunActionState implements IFSMState {
 				GoapAction currentAction = this.currentActions.peek();
 
 				if (currentAction.target == null) {
-					throw new Exception("Target is null!");
+					// throw new Exception("Target is null!");
 				} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
 					this.fsm.pushStack(new MoveToState(currentAction));
-				} else if (currentAction.checkProceduralPrecondition(goapUnit) && !currentAction.performAction(goapUnit)) {
-					throw new Exception("Action could not be performed! (proceduralPrecondition=True, performAction=false)");
+				} else if (currentAction.checkProceduralPrecondition(goapUnit)
+						&& !currentAction.performAction(goapUnit)) {
+					throw new Exception(
+							"Action could not be performed! (proceduralPrecondition=True, performAction=false)");
 				}
 
 				workingOnQueue = true;
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(this.currentActions.peek().getClass().getSimpleName());
 			e.printStackTrace();
 		}

@@ -51,7 +51,7 @@ public abstract class GoapUnit implements IGoapUnit {
 	/**
 	 * Can be called to remove any existing GoapActions and start fresh.
 	 */
-	protected final void resetActions() {
+	protected void resetActions() {
 		this.dispatchNewImportantUnitStackResetEvent();
 	}
 

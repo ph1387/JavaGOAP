@@ -84,7 +84,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * 
 	 * @return the sorted goal list of the goapUnit.
 	 */
-	private List<GoapState> sortGoalStates() {
+	protected List<GoapState> sortGoalStates() {
 		if (this.goapUnit.getGoalState().size() > 1) {
 			this.goapUnit.getGoalState().sort(new Comparator<GoapState>() {
 
@@ -104,7 +104,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * 
 	 * @see #createGraph(List goalState)
 	 */
-	private IWeightedGraph<GraphNode, WeightedEdge> createGraph() {
+	protected IWeightedGraph<GraphNode, WeightedEdge> createGraph() {
 		return createGraph(goapUnit.getGoalState());
 	}
 
@@ -117,7 +117,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @return a DirectedWeightedGraph generated from all possible unit actions
 	 *         for a goal.
 	 */
-	private IWeightedGraph<GraphNode, WeightedEdge> createGraph(List<GoapState> goalState) {
+	protected IWeightedGraph<GraphNode, WeightedEdge> createGraph(List<GoapState> goalState) {
 		IWeightedGraph<GraphNode, WeightedEdge> generatedGraph = this.generateGraphObject();
 
 		addVertices(generatedGraph, goalState);
@@ -136,7 +136,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @param goalState
 	 *            List of States the unit has listed as their goals.
 	 */
-	private void addVertices(IWeightedGraph<GraphNode, WeightedEdge> graph, List<GoapState> goalState) {
+	protected void addVertices(IWeightedGraph<GraphNode, WeightedEdge> graph, List<GoapState> goalState) {
 		// The effects from the world state as well as the precondition of each
 		// goal have to be set at the beginning, since these are the effects the
 		// unit tries to archive with its actions. Also the startNode has to
@@ -170,7 +170,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * 
 	 * @return all possible actions which are actually available for the unit.
 	 */
-	private HashSet<GoapAction> extractPossibleActions() {
+	protected HashSet<GoapAction> extractPossibleActions() {
 		HashSet<GoapAction> possibleActions = new HashSet<GoapAction>();
 
 		try {
@@ -200,7 +200,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @param endNodes
 	 *            the end nodes, to which paths inside the graph lead to.
 	 */
-	private void addEdges(IWeightedGraph<GraphNode, WeightedEdge> graph) {
+	protected void addEdges(IWeightedGraph<GraphNode, WeightedEdge> graph) {
 		Queue<GraphNode> nodesToWorkOn = new LinkedList<GraphNode>();
 
 		addDefaultEdges(graph, nodesToWorkOn);
@@ -232,7 +232,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 *            the Queue in which nodes which got connected are getting added
 	 *            to.
 	 */
-	private void addDefaultEdges(IWeightedGraph<GraphNode, WeightedEdge> graph, Queue<GraphNode> nodesToWorkOn) {
+	protected void addDefaultEdges(IWeightedGraph<GraphNode, WeightedEdge> graph, Queue<GraphNode> nodesToWorkOn) {
 
 		// graphNode.action != null -> start and ends
 		for (GraphNode graphNode : graph.getVertices()) {
@@ -272,7 +272,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @return true or false depending if all preconditions are met with the
 	 *         given effects.
 	 */
-	private static boolean areAllPreconditionsMet(HashSet<GoapState> preconditions, HashSet<GoapState> effects) {
+	protected static boolean areAllPreconditionsMet(HashSet<GoapState> preconditions, HashSet<GoapState> effects) {
 		boolean preconditionsMet = true;
 
 		for (GoapState precondition : preconditions) {
@@ -313,7 +313,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @return true or false depending if the creation of the edge was
 	 *         successful or not.
 	 */
-	private static <V, E extends WeightedEdge> boolean addEgdeWithWeigth(IWeightedGraph<V, E> graph, V firstVertex,
+	protected static <V, E extends WeightedEdge> boolean addEgdeWithWeigth(IWeightedGraph<V, E> graph, V firstVertex,
 			V secondVertex, E edge, double weight) {
 		try {
 			graph.addEdge(firstVertex, secondVertex, edge);
@@ -341,7 +341,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @return true or false depending on if the node was connected to another
 	 *         node.
 	 */
-	private boolean tryToConnectNode(IWeightedGraph<GraphNode, WeightedEdge> graph, GraphNode node,
+	protected boolean tryToConnectNode(IWeightedGraph<GraphNode, WeightedEdge> graph, GraphNode node,
 			Queue<GraphNode> nodesToWorkOn) {
 		boolean connected = false;
 
@@ -397,7 +397,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @return a graphPath with a given node as the end element, updated
 	 *         vertexSet, edgeSet and weight.
 	 */
-	private static WeightedPath<GraphNode, WeightedEdge> addNodeToGraphPath(
+	protected static WeightedPath<GraphNode, WeightedEdge> addNodeToGraphPath(
 			IWeightedGraph<GraphNode, WeightedEdge> graph, WeightedPath<GraphNode, WeightedEdge> baseGraphPath,
 			GraphNode nodeToAdd) {
 		List<GraphNode> vertices = new ArrayList<GraphNode>(baseGraphPath.getVertexList());
@@ -423,7 +423,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @return the Queue of GoapActions which has the lowest cost to archive a
 	 *         goal.
 	 */
-	private Queue<GoapAction> searchGraphForActionQueue(IWeightedGraph<GraphNode, WeightedEdge> graph) {
+	protected Queue<GoapAction> searchGraphForActionQueue(IWeightedGraph<GraphNode, WeightedEdge> graph) {
 		Queue<GoapAction> actionQueue = null;
 
 		for (int i = 0; i < this.endNodes.size() && actionQueue == null; i++) {
@@ -444,7 +444,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 * @param node
 	 *            the node whose paths leading to it are being sorted.
 	 */
-	private static void sortPathsLeadingToNode(GraphNode node) {
+	protected static void sortPathsLeadingToNode(GraphNode node) {
 		node.pathsToThisNode.sort(new Comparator<WeightedPath<GraphNode, WeightedEdge>>() {
 
 			@Override
@@ -465,7 +465,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 	 *            the end node needs to be known since it contains no action.
 	 * @return a Queue in which all actions from the given path are listed.
 	 */
-	private static Queue<GoapAction> extractActionsFromGraphPath(WeightedPath<GraphNode, WeightedEdge> path,
+	protected static Queue<GoapAction> extractActionsFromGraphPath(WeightedPath<GraphNode, WeightedEdge> path,
 			GraphNode startNode, GraphNode endNode) {
 		Queue<GoapAction> actionQueue = new LinkedList<GoapAction>();
 
@@ -476,4 +476,19 @@ public abstract class GoapPlanner implements IGoapPlanner {
 		}
 		return actionQueue;
 	}
+
+	// ------------------------------ Getter / Setter
+	
+	protected IGoapUnit getGoapUnit() {
+		return this.goapUnit;
+	}
+
+	protected GraphNode getStartNode() {
+		return this.startNode;
+	}
+
+	protected List<GraphNode> getEndNodes() {
+		return this.endNodes;
+	}
+
 }

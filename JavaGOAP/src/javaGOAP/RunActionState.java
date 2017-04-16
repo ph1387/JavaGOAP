@@ -57,14 +57,14 @@ class RunActionState implements IFSMState {
 				} else if (currentAction.checkProceduralPrecondition(goapUnit)
 						&& !currentAction.performAction(goapUnit)) {
 					throw new Exception(
-							"Action could not be performed! (proceduralPrecondition=True, performAction=false)");
+							"Action could not be performed! (proceduralPrecondition=True, performAction=False)");
 				}
 
 				workingOnQueue = true;
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " " + this.currentActions.peek().getClass().getSimpleName());
-			// e.printStackTrace();
+			e.printStackTrace();
 
 			throw new Exception();
 		}

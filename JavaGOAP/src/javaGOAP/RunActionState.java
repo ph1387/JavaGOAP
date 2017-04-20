@@ -50,9 +50,12 @@ class RunActionState implements IFSMState {
 			if (!this.currentActions.isEmpty()) {
 				GoapAction currentAction = this.currentActions.peek();
 
+				// No Exception since handling this is user specific
 				if (currentAction.target == null) {
-					throw new Exception("Target is null!");
-				} else if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
+					System.out.println("Target is null! " + currentAction.getClass().getSimpleName());
+				}
+
+				if (currentAction.requiresInRange(goapUnit) && !currentAction.isInRange(goapUnit)) {
 					this.fsm.pushStack(new MoveToState(currentAction));
 				} else if (currentAction.checkProceduralPrecondition(goapUnit)
 						&& !currentAction.performAction(goapUnit)) {
@@ -64,9 +67,9 @@ class RunActionState implements IFSMState {
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage() + " " + this.currentActions.peek().getClass().getSimpleName());
-			e.printStackTrace();
+			// e.printStackTrace();
 
-			throw new Exception();
+			// throw new Exception();
 		}
 		return workingOnQueue;
 	}

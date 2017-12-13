@@ -66,8 +66,7 @@ class RunActionState implements IFSMState {
 				workingOnQueue = true;
 			}
 		} catch (Exception e) {
-			System.out.println(e.getMessage() + " " + this.currentActions.peek().getClass().getSimpleName());
-			// e.printStackTrace();
+			 e.printStackTrace();
 
 			// throw new Exception();
 		}

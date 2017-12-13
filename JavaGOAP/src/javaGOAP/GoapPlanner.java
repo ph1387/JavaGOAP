@@ -13,8 +13,7 @@ import javaGOAP.graph.WeightedEdge;
 import javaGOAP.graph.WeightedPath;
 
 /**
- * GoapPlanner.java --- Class for generating a Queue of GoapActions using the
- * JGraphT library.
+ * GoapPlanner.java --- Class for generating a Queue of GoapActions.
  * 
  * @author P H - 28.01.2017
  */
@@ -71,7 +70,7 @@ public abstract class GoapPlanner implements IGoapPlanner {
 				createdPlan = searchGraphForActionQueue(createGraph());
 			}
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 		}
 		return createdPlan;
 	}

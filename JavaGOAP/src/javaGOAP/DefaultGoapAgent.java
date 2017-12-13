@@ -1,10 +1,5 @@
 package javaGOAP;
 
-import javaGOAP.GoapAgent;
-import javaGOAP.GoapPlanner;
-import javaGOAP.IGoapPlanner;
-import javaGOAP.IGoapUnit;
-
 /**
  * DefaultGoapAgent.java --- The Default implementation of the GoapAgent. Only
  * the IGoapUnit has to be assigned.

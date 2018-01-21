@@ -39,8 +39,8 @@ Different actions can have multiple effect and preconditions that must be matche
 ## References
  - [Goal Oriented Action Planning for a Smarter AI](https://gamedevelopment.tutsplus.com/tutorials/goal-oriented-action-planning-for-a-smarter-ai--cms-20793)
  - [Applying Goal-Oriented Action Planning to Games](http://alumni.media.mit.edu/~jorkin/GOAP_draft_AIWisdom2_2003.pdf)
- - [Javadoc](http://p1387h.github.io/JavaGOAP)
- - [How to use](http://github.com/p1387h/JavaGOAP/wiki)
+ - [Javadoc](https://p1387h.github.io/JavaGOAP/index.html)
+ - [How to use](https://github.com/p1387h/JavaGOAP/wiki)
 
 ## License
-MIT [license](../LICENSE.txt)
+MIT [license](https://github.com/p1387h/JavaGOAP/blob/master/LICENSE.txt)

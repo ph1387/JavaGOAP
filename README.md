@@ -24,7 +24,7 @@ GoalState: EatingCookie = true
 
 AvailableActions:
 	TakeCookieInHand 
-		- precondtion: CookieInHand = false
+		- precondition: CookieInHand = false
 		- effect: CookieInHand = true
 	EatCookie
 		- precondition: CookieInHand = true
